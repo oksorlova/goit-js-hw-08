@@ -5,7 +5,8 @@ const formEl = document.querySelector ('.feedback-form');
 const inputEl = document.querySelector ('.feedback-form input');
 const textareaEl = document.querySelector ('.feedback-form textarea');
 
-formEl.addEventListener ('input', throttle(onFormInput, 500));
+inputEl.addEventListener ('input', throttle(onFormInput, 500));
+textareaEl.addEventListener ('input', throttle(onFormInput, 500));
 formEl.addEventListener ('submit', onFormSubmit);
 populateFormItem();
 
