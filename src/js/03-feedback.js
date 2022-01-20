@@ -1,42 +1,42 @@
 import throttle from "lodash.throttle";
 
+const inputEl = document.querySelector('.feedback-form input')
+const textareaEl = document.querySelector('.feedback-form textarea')
+const formEl = document.querySelector('.feedback-form')
+const parseData = JSON.parse(localStorage.getItem("feedback-form-state"))
+let value = {};
 
-const formEl = document.querySelector ('.feedback-form');
-const inputEl = document.querySelector ('.feedback-form input');
-const textareaEl = document.querySelector ('.feedback-form textarea');
-
-inputEl.addEventListener ('input', throttle(onFormInput, 500));
-textareaEl.addEventListener ('input', throttle(onFormInput, 500));
-formEl.addEventListener ('submit', onFormSubmit);
-populateFormItem();
-
-
-
-function onFormInput(evt) {
-    const mail = evt.currentTarget.email.value;   
-    const text = evt.currentTarget.message.value; 
-    
-    localStorage.setItem("feedback-form-state", JSON.stringify({email: mail, message: text}));
-    
-    
+if (localStorage.getItem("feedback-form-state")) { 
+    value =  parseData;
+    if (parseData.email)
+    { inputEl.value = parseData.email };
+    if (parseData.message)
+    { textareaEl.value = parseData.message };
 }
-function onFormSubmit (evt) {
+
+
+formEl.addEventListener('submit', onFormSubmit);
+formEl.addEventListener('input', throttle(onFormInput, 500) );
+
+function onFormSubmit(evt) {
     evt.preventDefault();
-    evt.currentTarget.reset();
-    console.log(localStorage.getItem("feedback-form-state"));
-    localStorage.removeItem("feedback-form-state");
-    
-    
-}
-
-function populateFormItem() {
-    const savedMessage = localStorage.getItem("feedback-form-state");
-    const itemValue = JSON.parse(savedMessage);
-
-    if (savedMessage) {
-    inputEl.value = itemValue.email;
-        textareaEl.value = itemValue.message;
-
+    if (localStorage.getItem("feedback-form-state")) { 
+        const formObject = {};
+        formObject[inputEl.name] = inputEl.value;
+        formObject[textareaEl.name] = textareaEl.value;
+        console.log(formObject);
+        
     }
     
+   evt.currentTarget.reset()
+    localStorage.removeItem("feedback-form-state")
+    
 }
+
+function onFormInput(evt) {
+    value[evt.target.name] = evt.target.value;
+    localStorage.setItem("feedback-form-state", JSON.stringify(value));
+    
+}
+
+
